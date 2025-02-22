@@ -26,6 +26,9 @@ class Reservation(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    
     # Fonction qui permet d'afficher une réservation sous forme de texte
     def __str__(self):
         # Lors de l'affichage de la reservation , sera afficher sous cette forme

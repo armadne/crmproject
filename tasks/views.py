@@ -1,33 +1,38 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
 from .models import Reservation
 
-# Create your views here.
+@csrf_exempt  # Désactive la protection CSRF (utile si tu testes avec Postman)
+def reservation_list(request):
+    if request.method == "GET":
+        # Récupérer toutes les réservations
+        reservations = Reservation.objects.all().values("user__username", "date", "time")
+        return JsonResponse({"reservations": list(reservations)}, status=200)
 
-
-def reservation_view(request):
-    if request.method == "POST":
-        
-        if not request.user.is_authentificated:
+    elif request.method == "POST":
+        if not request.user.is_authenticated:  # Correction de l'erreur
             return JsonResponse({"message": "Utilisateur non authentifié"}, status=401)
-        
-        user = request.user # Qui fait la reservation
-        date = request.POST.get("date")  
-        time = request.POST.get('time')
-        
-        if Reservation.objects.filter(date=date, time=time).exists():
-            return JsonResponse({"message": "Créneau déjà réservé"}, status=400)
-        
-        # Créer la reservation
-        
-        Reservation.objects.create(user=user, date=date, time=time)
-        
-        return JsonResponse({"message": "Reservation réussie"}, status=201)
-    
+
+        try:
+            data = json.loads(request.body)  # Lire la requête JSON envoyée par le frontend
+            date = data.get("date")
+            time = data.get("time")
+            first_name = data.get("first_name")
+            last_name = data.get("last_name")
+
+            if Reservation.objects.filter(date=date, time=time).exists():
+                return JsonResponse({"message": "Créneau déjà réservé"}, status=400)
+
+            # Créer la réservation
+            Reservation.objects.create(user=request.user, first_name=first_name, last_name=last_name, date=date, time=time)
+            return JsonResponse({"message": "Réservation réussie"}, status=201)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Données JSON invalides"}, status=400)
+
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
-
 def api_home(request):
-    # JsonResponse envoie une réponse au format JSON (lisible par le frontend).
-    # api_home est une simple fonction qui renvoie un message JSON, pour tester que l’API fonctionne.
     return JsonResponse({"message": "Bienvenue sur l'API Django"})
