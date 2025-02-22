@@ -1,0 +1,7 @@
+Creation Super User
+
+Username : SuperUser
+
+Email address : madane.aroul@hotmail.com
+
+password: test123
