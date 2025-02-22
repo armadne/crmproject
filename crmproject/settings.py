@@ -59,14 +59,16 @@ MIDDLEWARE = [
     # permet a notre API Django d'accepter des requêtes venant du frontend REACT
 ]
 
-
+# FRONTEND REACT
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000", #Permet au frontend React de communiquer avec Django
 ]
 
+
+# BACKEND DJANGO
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
 ]
 
 ROOT_URLCONF = 'crmproject.urls'
