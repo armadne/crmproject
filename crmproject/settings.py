@@ -44,7 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tasks', # Ajoute l'application ici
     'rest_framework', # Ajoute Django REST Framework pour créer une API
-    'corsheaders',
+    'corsheaders', # Accepte les requetes venant de React
+    'tasks', # Notre Application 'tasks'
+    'rest_framework_simplejwt'
+    
 ]
 
 MIDDLEWARE = [
@@ -136,6 +139,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+AUTH_USER_MODEL = 'tasks.CustomUser'
 
 
 # Static files (CSS, JavaScript, Images)

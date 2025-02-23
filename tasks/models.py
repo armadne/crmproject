@@ -4,18 +4,24 @@ from django.db import models
 # récupérer le modèle d'utilisateur utilisé dans ton projet Django.
 from django.contrib.auth import get_user_model
 
+from django.contrib.auth.models import AbstractUser
 
-# Recuperation du modèle de l'utilisateur (User) défini dans Django
+from django.conf import settings # récupére le modèle utilisateur
 
-User = get_user_model()
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    
+    def __str__(self):
+        return self.username
+
 
 # Création d'une classe pour la Reservation
 
 class Reservation(models.Model):
     # On relie chaque reservation à un utilisateur
     # Si l'utilisateur est supprimé, toutes ses réservations seront aussi supprimés
-    
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Relie chaque réservation à un utilisateur (CustomUser défini dans settings)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
     # On ajoute un champ pour stocker la date de la reservation
     date = models.DateField()
@@ -37,14 +43,3 @@ class Reservation(models.Model):
         return f"Reservation de {self.user.username} le {self.date} à {self.time}"
     
     
-    class Register(models.Model): # On définit une classe Register qui représente une table dans la base de données.
-        name = models.CharField(max_length=50) # Ce champ stocke le prénom de l'utilisateur, avec une limite de 50 caractères.*
-        family_name = models.CharField(max_length=50) # Ce champ stocke le nom de famille de l'utilisateur, aussi limité à 50 caractères.
-        password = models.CharField(max_length=50) # Ce champ stocke le mot de passe sous forme de texte, avec une limite de 128 caractères. Il doit être haché avant stockage.
-        #password_confirm = models.CharField(max_length=50)
-        email = models.EmailField(unique=True)
-        
-        def __str__(self):   # Cette méthode spéciale est utilisée pour définir la représentation textuelle de l'objet.
-                    # Elle permet d'afficher une chaîne de caractères contenant le prénom, le nom et l'email de l'utilisateur.
-        # Cela est utile, par exemple, lorsqu'on affiche un objet Register dans l'interface d'administration Django.
-            return f"{self.first_name} {self.last_name} ({self.email})"
