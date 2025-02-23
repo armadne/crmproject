@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks', # Ajoute l'application ici
     'rest_framework', # Ajoute Django REST Framework pour créer une API
     'corsheaders', # Accepte les requetes venant de React
     'tasks', # Notre Application 'tasks'

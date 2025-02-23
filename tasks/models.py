@@ -1,8 +1,7 @@
 # Importation base de donnée de django
 from django.db import models
 
-# récupérer le modèle d'utilisateur utilisé dans ton projet Django.
-from django.contrib.auth import get_user_model
+
 
 from django.contrib.auth.models import AbstractUser
 
