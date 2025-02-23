@@ -15,7 +15,7 @@ const Reservations = () => {
         email: "", // Email du clienyt
         date: "",  // Date de réservation
         time: "",   // Heure de la réservation
-        people: 1   // Nombre de personnes (on met 1 par défaut)
+        guest: 1   // Nombre de personnes (on met 1 par défaut)
     });
 
     // Fonction pour mettre à jour les valeurs de FormData quand l'utilisateur écrit dans un champ du formulaire
