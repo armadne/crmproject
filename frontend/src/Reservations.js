@@ -32,8 +32,14 @@ const Reservations = () => {
              const response = await axios.post("http://127.0.0.1:8000/api/reservations/", formData);
              console.log(response.data) // Affiche la réponse du serveur dans la console (pour debug)
 
+             console.log('Redirection vers la page de confirmation...')
+
              // Si l'envoi est réussi, on redirige l'utilisateur vers la page de confirmation
-             navigate("/Confirmation", { state : {reservationData: formData} });
+             // "Navigate" permet de faire une redirection vers la page /Confirmation
+             // "state" permet d'envoyer les infos du fomulaire a la page de confirmation
+             // "reservationData" et "FormeData" sont les infos du formualaire a envoyer a la page de confirmation
+             //Cette ligne sert donc à aller sur la page /Confirmation en envoyant les données de réservation pour qu'on puisse les afficher
+             navigate("/confirmation", { state : {reservationData: formData} });
 
         } catch (error) {
             console.error("Erreur lors de la réservation :", error);
