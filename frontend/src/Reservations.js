@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Pour changer de page apres avoir confirmer la reservation
-import axios from "axios"; // Pour envoyer des données au Backend Django
+//import axios from "axios"; // Pour envoyer des données au Backend Django
 
 // Création du composant "Reservations"
 
@@ -15,7 +15,7 @@ const Reservations = () => {
         email: "", // Email du clienyt
         date: "",  // Date de réservation
         time: "",   // Heure de la réservation
-        guest: 1   // Nombre de personnes (on met 1 par défaut)
+        guests: 1   // Nombre de personnes (on met 1 par défaut)
     });
 
     // Fonction pour mettre à jour les valeurs de FormData quand l'utilisateur écrit dans un champ du formulaire
@@ -29,10 +29,10 @@ const Reservations = () => {
         
         try {
             // Envoie les données du formulaire à notre API Django
-             const response = await axios.post("http://127.0.0.1:8000/api/reservations/", formData);
-             console.log(response.data) // Affiche la réponse du serveur dans la console (pour debug)
+             //const response = await axios.post("http://127.0.0.1:8000/api/reservations/", formData);
+             //console.log(response.data); // Affiche la réponse du serveur dans la console (pour debug)
 
-             console.log('Redirection vers la page de confirmation...')
+             //console.log('Redirection vers la page de confirmation...')
 
              // Si l'envoi est réussi, on redirige l'utilisateur vers la page de confirmation
              // "Navigate" permet de faire une redirection vers la page /Confirmation
@@ -43,6 +43,7 @@ const Reservations = () => {
 
         } catch (error) {
             console.error("Erreur lors de la réservation :", error);
+           // navigate("/confirmation", { state : {reservationData: formData} });
             alert("Erreur lors de la réservation. Veuillez réessayer. ");
         }
     }

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'rest_framework', # Ajoute Django REST Framework pour créer une API
     'corsheaders', # Accepte les requetes venant de React
     'tasks', # Notre Application 'tasks'
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
     
 ]
 

@@ -22,23 +22,28 @@ class Reservation(models.Model):
     # Relie chaque réservation à un utilisateur (CustomUser défini dans settings)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
+    
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    
     # On ajoute un champ pour stocker la date de la reservation
     date = models.DateField()
     
     # On ajoute un champ pour stocker l'heure de la reservation
     time = models.TimeField()
     
+    guests = models.CharField(max_length=10)
+    
     # Ajout qui enregistre automatiquement la date et l'heure
     
     created_at = models.DateTimeField(auto_now_add=True)
     
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+
     
     # Fonction qui permet d'afficher une réservation sous forme de texte
     def __str__(self):
         # Lors de l'affichage de la reservation , sera afficher sous cette forme
         # Reservation de [Nom de l'utilisateur] , la [date] et [heure]
-        return f"Reservation de {self.user.username} le {self.date} à {self.time}"
+        return f"Reservation de {self.user.first_name} le {self.date} à {self.time}"
     
     
