@@ -6,7 +6,7 @@ import json
 
 # Importation du modèle d'utilisateur et de la fonction pour hacher les mots de passe
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
+#from django.contrib.auth.hashers import make_password
 
 # Importation du modèle de réservation défini dans models.py
 from .models import Reservation
@@ -79,7 +79,7 @@ def reservation_list(request):
             # Gérer le cas ou le JSON envoyé est invalide
             return JsonResponse({"message": "Données JSON invalides"}, status=400)
 
-    # # Si la méthode HTTP utilisée n'est ni GET ni POST, on renvoie une erreur
+    # Si la méthode HTTP utilisée n'est ni GET ni POST, on renvoie une erreur
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
 
@@ -103,7 +103,7 @@ def register(request):
             data = json.loads(request.body)
             
             # Extraction des informations envoyées
-            first_name = data.get("name") # Récupère le champ "username"
+            first_name = data.get("name") # Récupère le champ "name"
             last_name = data.get("family_name")
             email = data.get("email") # Récupère le champ "email"
             password = data.get("password") # Récupère le champ "password"

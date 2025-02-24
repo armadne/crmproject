@@ -10,15 +10,17 @@ const Reservations = () => {
     const navigate = useNavigate(); // Permet de rediriger l'utilisateur vers une autre page après la reservation
 
     // Création d'un etat (useState) pour stcker les infos que l'utilisateur va entrer dans le formulaire 
+    // FormData est le formulaire pour RESERVER UNE CHAMBRE
     const [formData, setFormData] = useState({
         name: "", // Nom du client
-        email: "", // Email du clienyt
+        email: "", // Email du client
         date: "",  // Date de réservation
         time: "",   // Heure de la réservation
         guests: 1   // Nombre de personnes (on met 1 par défaut)
     });
 
     // Fonction pour mettre à jour les valeurs de FormData quand l'utilisateur écrit dans un champ du formulaire
+    // A chaque fois que l'user ecrit quelque chose le champ du formulaire se remet a jour 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value});
     };
@@ -27,11 +29,22 @@ const Reservations = () => {
     const handleSubmit = async (e) => {
         e.preventDefault(); // Empêche le rechargement de la page
         
+        console.log("Envoie des données au backend");
+
+        // PROBLEME: ECHEC ENVOIE DES DONNEES DU FORMULAIRE A l'API DJANGO <---- Probleme resolu en remplaçant axios par fetch , 
+        // axios et fetch ont la meme fonction, celle d'envoyer des requêtes HTTP au serveur backend Django
         try {
             // Envoie les données du formulaire à notre API Django
-             //const response = await axios.post("http://127.0.0.1:8000/api/reservations/", formData);
-             //console.log(response.data); // Affiche la réponse du serveur dans la console (pour debug)
+             const response = await fetch("http://127.0.0.1:8000/api/reservations/", {
+                method: "POST", 
+                headers:{
+                    "Content-Type": "application/json" // Spécifier qu'on envoie du JSON
+                },
+                body: JSON.stringify(formData) // Convertir formData en JSON
+             }); // await axios.post fetch("http://127.0.0.1:8000/api/reservations/", formData);
+             console.log(response.data); // Affiche la réponse du serveur dans la console (pour debug)
 
+             console.log("reussite de l'envoi");
              //console.log('Redirection vers la page de confirmation...')
 
              // Si l'envoi est réussi, on redirige l'utilisateur vers la page de confirmation
