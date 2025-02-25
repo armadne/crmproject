@@ -33,7 +33,7 @@ def reservation_list(request):
     if request.method == "GET":
         # Récupérer toutes les réservations
         reservations = Reservation.objects.all().values("name", "email", "date", "time", "guests")
-        return JsonResponse({"reservations": list(reservations)}, status=200)
+        #return JsonResponse({"reservations": list(reservations)}, status=200)
 
 # POUR L'AUTHENTIFICATION, METTRE EN PLACE UN SYTEME AUTH
 # ET ENLEVER COMMENTAIRE CI DESSOUS
@@ -97,19 +97,19 @@ def register(request):
     """
     
     # on vérifie que la méthode HTTP utilisée est bien POST
-    if request.method == "GET":
+    if request.method == "POST":
         try:
             # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
             data = json.loads(request.body)
             
             # Extraction des informations envoyées
-            first_name = data.get("name") # Récupère le champ "name"
-            last_name = data.get("family_name")
+            name = data.get("name") # Récupère le champ "name"
+            family_name = data.get("family_name")
             email = data.get("email") # Récupère le champ "email"
             password = data.get("password") # Récupère le champ "password"
             
             # Vérification que tous les champs sont bien remplis
-            if not first_name or not last_name or not email or not password:
+            if not name or not family_name or not email or not password:
                 return JsonResponse({"message": "Tous les champs sont obligatoires"}, status=400)
             
             # Vérification si le nom ou le nom de famille ou l'email existe deja

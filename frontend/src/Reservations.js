@@ -36,7 +36,7 @@ const Reservations = () => {
         try {
             // Envoie les données du formulaire à notre API Django
              const response = await fetch("http://127.0.0.1:8000/api/reservations/", {
-                method: "POST", 
+                method: "GET", 
                 headers:{
                     "Content-Type": "application/json" // Spécifier qu'on envoie du JSON
                 },
@@ -56,7 +56,7 @@ const Reservations = () => {
 
         } catch (error) {
             console.error("Erreur lors de la réservation :", error);
-           // navigate("/confirmation", { state : {reservationData: formData} });
+           
             alert("Erreur lors de la réservation. Veuillez réessayer. ");
         }
     }
