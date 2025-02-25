@@ -30,7 +30,7 @@ const Login = () => {
         // car si la page se recharge les données du formualaire seront perdus
         const handleSubmit = async (e) => {
             
-        // "e" = evenement et l'evenemùent par default est de recharger la page
+        // "e" = evenement et l'evenement par default est de recharger la page
 
         e.preventDefault(); //  // Empeche la page de se recharger lors de l'envoi du formualaire
 

@@ -1,3 +1,7 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import get_user_model  
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,6 +21,84 @@ User = get_user_model()
 
 
 
+@csrf_exempt  # Désactive la protection CSRF (sinon Django bloque les requêtes POST externes)
+# FONCTION INSCRIPTION
+def register(request):
+    
+    """
+    Cette fonction permet à un utilisateur de s'inscrire en envoyant 
+    un username, un email et un mot de passe.
+    """
+    
+    # on vérifie que la méthode HTTP utilisée est bien POST
+    if request.method == "POST":
+        try:
+            # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
+            data = json.loads(request.body)
+            
+            # Extraction des informations envoyées
+            name = data.get("name") # Récupère le champ "name"
+            family_name = data.get("family_name")
+            email = data.get("email") # Récupère le champ "email"
+            password = data.get("password") # Récupère le champ "password"
+            
+            # Vérification que tous les champs sont bien remplis
+            if not name or not family_name or not email or not password:
+                return JsonResponse({"message": "Tous les champs sont obligatoires"}, status=400)
+            
+            # Vérification si le nom ou le nom de famille ou l'email existe deja
+            #if User.objects.filter(email=email).exists():
+                #return JsonResponse({"message": "Cette adresse mail existe deja dans notre base de donnée"}, status=400)
+            
+            # Création du nouvel utilisateur avec un password hashé
+            #user = User.objects.create(
+            #    name=name,
+            #    family_name=family_name,
+            #    email=email,
+             #   password= make_password(password) ## Hachage du mot de passe pour plus de sécurité
+            #)
+            
+            # réponse en JSON confirmant l'inscription
+            return JsonResponse({"message": "Inscription réussie"}, status=201)
+            
+        except json.JSONDecodeError:
+            # Gérer le cas où les données envoyées ne sont pas en format JSON valide
+            return JsonResponse({"message": "Format JSON invalide"}, status=400)
+        
+         # Si la méthode HTTP n'est pas POST, on renvoie une erreur
+    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
+         
+
+@csrf_exempt # Désactive la protection CSRF (sinon Django bloque les requetes POST externes)
+def login(request):
+    if request.method == "POST":
+        
+        try:
+            # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
+            data = json.load(request.body)
+            email = data.get("email")
+            password = data.get("password")
+            
+            # Vérifier que l'email et le mot de passe sont fournis
+            if not email or not password:
+                return JsonResponse({"message": "Email et mot de passe requis"}, status=400)
+            
+            # Verifier si l'utilisateur existe avec cet email 
+            user = User.objects.filter(email=email).first()
+            
+            # Si un utilisateur est trouvé, 
+            # on vérifie si le mot de passe fourni correspond au
+            # mot de passe haché stocké dans la base donnée
+            if user and check_password(password, user.password): # check_password(password, user.password) compare le mot de passe entré(password)(dans la page de connexion) avec le password hashé enregistré(user.password) enregistrer dans la base de donnée
+                login(request, user) # Authentifie l'utilisateur
+                return JsonResponse({"message": "Connexion réussie"}, status=200)
+            else:
+                return JsonResponse({"message": "Identifiants invalides"}, status=401) # status 401 : l'utilisateur doit etre authentifié
+        
+        except json.JSONDecodeErrorError:
+            return JsonResponse({"message": "Format JSON invalide"}, status=400) # statut 400 = BAD REQUEST donnée manquante coté utilisateur/client
+        
+    return JsonResponse({"message": "Méthode non autorisée"}, status=405) # Utilisation de mauvaise méthode(exemple: utilisation de GET au lieu de POST)
 
 @csrf_exempt  # Désactive la protection CSRF (utile si tu testes avec Postman)
 # FONCTION RESERVATION
@@ -85,55 +167,6 @@ def reservation_list(request):
 
 
 
-
-
-@csrf_exempt  # Désactive la protection CSRF (sinon Django bloque les requêtes POST externes)
-# FONCTION INSCRIPTION
-def register(request):
-    
-    """
-    Cette fonction permet à un utilisateur de s'inscrire en envoyant 
-    un username, un email et un mot de passe.
-    """
-    
-    # on vérifie que la méthode HTTP utilisée est bien POST
-    if request.method == "POST":
-        try:
-            # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
-            data = json.loads(request.body)
-            
-            # Extraction des informations envoyées
-            name = data.get("name") # Récupère le champ "name"
-            family_name = data.get("family_name")
-            email = data.get("email") # Récupère le champ "email"
-            password = data.get("password") # Récupère le champ "password"
-            
-            # Vérification que tous les champs sont bien remplis
-            if not name or not family_name or not email or not password:
-                return JsonResponse({"message": "Tous les champs sont obligatoires"}, status=400)
-            
-            # Vérification si le nom ou le nom de famille ou l'email existe deja
-            #if User.objects.filter(email=email).exists():
-                #return JsonResponse({"message": "Cette adresse mail existe deja dans notre base de donnée"}, status=400)
-            
-            # Création du nouvel utilisateur avec un password hashé
-            #user = User.objects.create(
-            #    name=name,
-            #    family_name=family_name,
-            #    email=email,
-             #   password= make_password(password) ## Hachage du mot de passe pour plus de sécurité
-            #)
-            
-            # réponse en JSON confirmant l'inscription
-            return JsonResponse({"message": "Inscription réussie"}, status=201)
-            
-        except json.JSONDecodeError:
-            # Gérer le cas où les données envoyées ne sont pas en format JSON valide
-            return JsonResponse({"message": "Format JSON invalide"}, status=400)
-        
-         # Si la méthode HTTP n'est pas POST, on renvoie une erreur
-    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
-         
          
 
 def api_home(request):
