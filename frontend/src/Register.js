@@ -31,28 +31,38 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();  // Empêche la page de se recharger lors de l'envoi du formulaire
 
-        
+    try {
+                    
         // On envoie les données du formulaire au serveur Django
         // "fetch" envoie les données au backend django (http://127.0.0.1:8000)
         const response =await fetch("http://127.0.0.1:8000/api/register/", {
             method: "POST", // On utilise la méthode POST pour envoyer les données
-            headers: { "Content-Type": "application.json" }, // On precise que les données envoyées sont en JSON
-            body: JSON.stringify(formData), // On convertit les données en texte JSON
+            headers: { 
+                "Content-Type": "application/json"
+             }, // On precise que les données envoyées sont en JSON
+        
+        body: JSON.stringify(formData) // On convertit les données en texte JSON
         });
 
         // On récupère la réponse du serveur et on la convertit JSON
-        const data = await response.json();
+        const data = await response.json(); 
 
         if (response.ok) {
             setMessage("Inscription réussie !"); // Si l'inscription est réussie, on affiche un message de succés
-            //window.location.href = "http://www.google.com"
-            navigate("/reservations")
+            navigate("/login") // // Rediriger vers la page de connexion après inscription
         }else {
             setMessage(data.error || "Erreur lors de l'inscription"); // Sinon, on affiche un message d'erreur
             
+        } 
+    
+    }catch (error) {
+            console.log("Erreur d'inscription :", error);
+            setMessage("Une erreur est survenue");
         }
-    };
 
+        
+    }
+    
     return(
         <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", textAlign: "center"}}>
             <h2>Inscription</h2> {/* Titre du formulaire */}

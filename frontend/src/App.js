@@ -8,7 +8,13 @@ import Reservations from './Reservations';
 
 // Importation du composant Confirmation de Confirmation.js
 import Confirmation from "./Confirm_reservation";
+
+// Importation du composant Register de Register.js
 import Register from './Register';
+
+// Importation du composant Login de Login.js
+import Login from './Login'
+
 
 
 
@@ -21,6 +27,8 @@ function App() {
 
                 {/* Page principale avec le formulaire */}
                 <Route path="/" element={<Register />} />
+
+                <Route path="/login" element={<Login />} />
 
                 {/* Page de confirmation après la réservation */}
                 <Route path="/confirmation" element={<Confirmation />} />

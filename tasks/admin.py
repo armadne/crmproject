@@ -1,7 +1,6 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from .models import User
 
-from .models import CustomUser
-# Register your models here.
-
-admin.site.register(CustomUser, UserAdmin)  # Enregistre CustomUser dans l'admin Django
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('name', 'family_name', 'email')

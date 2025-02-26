@@ -20,7 +20,8 @@ const Confirmation = () => {
 
     return(
         <div style={{ textAlign: "center", padding: "20px" }}>
-        <h2>Merci pour votre réservation !</h2>
+        <h2>Merci {reservationData.name}, votre réservation a bien été prise en compte !</h2>
+        
         <p>Voici les détails de votre réservation :</p>
         <ul style={{ listStyle: "none", padding: 0 }}>
             <li><strong>Nom :</strong> {reservationData.name}</li>

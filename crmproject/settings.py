@@ -33,6 +33,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Par défaut
+]
+
+
 # Application definition
 # liste applications Django utilisées dans le projet
 INSTALLED_APPS = [
@@ -45,7 +50,7 @@ INSTALLED_APPS = [
     'rest_framework', # Ajoute Django REST Framework pour créer une API
     'corsheaders', # Accepte les requetes venant de React
     'tasks', # Notre Application 'tasks'
-    'rest_framework_simplejwt',
+    'rest_framework_simplejwt'
     
 ]
 
@@ -61,10 +66,19 @@ MIDDLEWARE = [
     # permet a notre API Django d'accepter des requêtes venant du frontend REACT
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+
 # FRONTEND REACT
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", #Permet au frontend React de communiquer avec Django
-]
+#CORS_ALLOWED_ORIGINS = [
+    #"http://localhost:3000", #Permet au frontend React de communiquer avec Django
+#]
 
 
 # BACKEND DJANGO
@@ -139,7 +153,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'tasks.CustomUser'
+AUTH_USER_MODEL = 'tasks.User'
 
 
 # Static files (CSS, JavaScript, Images)
@@ -152,5 +166,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
 

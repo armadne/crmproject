@@ -12,8 +12,11 @@ const Login = () => {
         password: "" // champ pour le password
     });
 
+   
+
     // On crée un état message pour afficher un message après connexion
-    const [message, setMessage] = useState("");
+    
+     const [message, setMessage] = useState("");
 
     //Fonction qui s'éxecute lorsque l'utilisateur ecris dans un champ
     // Met a jour les champs au fur et à mesure que l'utilisateur ecris dans un champ
@@ -37,22 +40,27 @@ const Login = () => {
         // On envoie les données du formulaire au serveur Django
         // "fetch" envoie les données au backend django (http://127.0.0.1:8000)
 
-        const response = await fetch("http://127.0.0.1:8000/api/login", {
+        const response = await fetch("http://127.0.0.1:8000/api/login/", {
             method: "POST", // On utilise la méthode POST pour envoyer les données
-            headers: { "Content-Type": "application.json"},     // On precise que les données envoyées sont en format JSON 
+            headers: { "Content-Type": "application/json"},     // On precise que les données envoyées sont en format JSON 
             body: JSON.stringify(formData), // On convertit les données en texte JSON
         });
 
         // Apres avoir envoyer les données du formulaire au backend,
         // le backend django va repondre au frontend React
         // On récupere la réponse du serveur et on la convertit en JSON
-        const data = await response.json();
+        /**** */
+        //const data = await response.json();
 
         if (response.ok) {
-            setMessage("Inscription réussie !"); // Si l'inscription est reussie, on affiche un message de succés
-            navigate("/register");
+            setMessage("Connexion réussie !"); // Si l'inscription est reussie, on affiche un message de succés
+            // Enregistre le token de l'utilisateur après une connexion réussie
+            //localStorage.setItem("token", data.token)  // stcke le token    // ** COMMENTER **//
+            // Redirige vers la page de reservations
+            navigate("/reservations"); // Redirection vers la page reservations
         }else {
-            setMessage(data.error || "Erreur lors de l'inscription") // Sinon on affiche un message d'erreur
+            setMessage("Erreur lors de l'inscription") // Sinon on affiche un message d'erreur  data.message
+            //navigate("/reservations");
         }
     };
 
@@ -60,13 +68,13 @@ const Login = () => {
         <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", textAlign: "center"}}>
             <h2>Login</h2> {/* titre du formulaire */}
 
-            {message && <p>{message}</p>} {/* Affiche le message d'erreur ou de succés si nécessaire */}
+         {message && <p>{message}</p>}  {/*Affiche le message d'erreur ou de succés si nécessaire */}
 
             <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column"}}>
                 <input type="text" name="email" placeholder='test12@gmail.com' onChange={handleChange} required /><br/>
-                <input type='password' name='password' onChange={handleChange} /><br/>
+                <input type="password" name='password' onChange={handleChange} /><br/>
 
-                <button type='submit' style={{marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor: "pointer"}}>Se connecter</button>
+                <button type="submit" style={{marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor: "pointer"}}>Se connecter</button>
             </form>
         </div>
     );
