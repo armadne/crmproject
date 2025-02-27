@@ -12,6 +12,7 @@ const Reservations = () => {
     // Création d'un etat (useState) pour stcker les infos que l'utilisateur va entrer dans le formulaire 
     // FormData est le formulaire pour RESERVER UNE CHAMBRE
     const [formData, setFormData] = useState({
+        
         name: "", // Nom du client
         email: "", // Email du client
         date: "",  // Date de réservation
@@ -107,15 +108,15 @@ const Reservations = () => {
                 <input type="email" name="email" placeholder="Votre Email" value={formData.email} onChange={handleChange} required />
                 <input type="date" name="date" value={formData.date} onChange={handleChange} required />
                 <input type="time" name="time" value={formData.time} onChange={handleChange} required />
-                <input type="number" name="guests" min="1" placeholder="Nombre de personnes" value={formData.people} onChange={handleChange} required />
+                <input type="number" name="guests" min="1" placeholder="Nombre de personnes" value={formData.guests} onChange={handleChange} required />
                 <button type="submit" style={{ marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor: "pointer" }}>
                     Confirmer la réservation
                 </button>
 
             </form>
 
-            {/* Affichage de l'historique des réservations */}
-            <div style={{ marginTop: "20px"}}>
+                        {/* Affichage de l'historique des réservations */}
+                        <div style={{ marginTop: "20px"}}>
                 <h3>Reservations précédentes :</h3>
                 {reservations.length === 0 ? (
                     <p> Aucune réservation enregistrée.</p>
@@ -129,6 +130,8 @@ const Reservations = () => {
                    </ul> 
                 )}
             </div>
+
+
 
         </div>
     );

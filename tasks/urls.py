@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import reservation_list, register_view, api_home, login_view
 
+
+
 # Ajout
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import MyTokenObtainPairView

@@ -149,6 +149,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 
+
+
 @csrf_exempt  # Désactive la protection CSRF (utile si tu testes avec Postman)
 # FONCTION RESERVATION
 def reservation_list(request):
@@ -164,14 +166,12 @@ def reservation_list(request):
     if request.method == "GET":
         # Récupérer toutes les réservations
         reservations = Reservation.objects.all().values("name", "email", "date", "time", "guests")
-        return JsonResponse({"reservations": list(reservations)}, status=200)
+        return JsonResponse({"reservations": (reservations)}, status=200)
 
 # POUR L'AUTHENTIFICATION, METTRE EN PLACE UN SYTEME AUTH
 # ET ENLEVER COMMENTAIRE CI DESSOUS
 # Cette ligne ne vas jamais s'executer
     elif request.method == "POST":
-       
-            #return JsonResponse({"message": "Utilisateur non authentifié"}, status=401)
             
         try:
             # # Récupération des données envoyées par l'utilisateur en JSON

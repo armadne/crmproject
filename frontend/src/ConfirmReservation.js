@@ -28,7 +28,7 @@ const Confirmation = () => {
             <li><strong>Email :</strong> {reservationData.email}</li>
             <li><strong>Date :</strong> {reservationData.date}</li>
             <li><strong>Heure :</strong> {reservationData.time}</li>
-            <li><strong>Nombre de personnes :</strong> {reservationData.people}</li>
+            <li><strong>Nombre de personnes :</strong> {reservationData.guests}</li>
         </ul>
         <button onClick={() => navigate("/")} style={{ padding: "10px", backgroundColor: "#007bff", color: "white", border: "none", cursor: "pointer" }}>
             Retour à l'accueil

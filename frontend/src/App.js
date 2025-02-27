@@ -7,7 +7,7 @@ import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Reservations from './Reservations';  
 
 // Importation du composant Confirmation de Confirmation.js
-import Confirmation from "./Confirm_reservation";
+import Confirmation from "./ConfirmReservation";
 
 // Importation du composant Register de Register.js
 import Register from './Register';
@@ -30,10 +30,10 @@ function App() {
 
                 <Route path="/login" element={<Login />} />
 
-                {/* Page de confirmation après la réservation */}
-                <Route path="/confirmation" element={<Confirmation />} />
-
                 <Route path="/reservations" element={<Reservations/>} />
+
+                   {/* Page de confirmation après la réservation */}
+                   <Route path="/confirmation" element={<Confirmation />} />
 
 
             </Routes>
