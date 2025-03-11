@@ -15,6 +15,8 @@ import Register from './Register';
 // Importation du composant Login de Login.js
 import Login from './Login'
 
+import  FeedbackQRPage from  './Reviews'
+
 
 
 
@@ -34,6 +36,9 @@ function App() {
 
                    {/* Page de confirmation après la réservation */}
                    <Route path="/confirmation" element={<Confirmation />} />
+
+                   <Route path="/reviews" element={<FeedbackQRPage />} />
+                
 
 
             </Routes>
