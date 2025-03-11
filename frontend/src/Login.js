@@ -65,7 +65,15 @@ const Login = () => {
     };
 
     return(
+        
+
+
         <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", textAlign: "center"}}>
+
+ 
+
+
+
             <h2>Login</h2> {/* titre du formulaire */}
 
          {message && <p>{message}</p>}  {/*Affiche le message d'erreur ou de succés si nécessaire */}

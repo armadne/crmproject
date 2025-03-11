@@ -18,7 +18,7 @@ from django.contrib.auth import get_user_model
 #from django.contrib.auth.hashers import make_password
 
 # Importation du modèle de réservation défini dans models.py
-from .models import Reservation
+from .models import Reservation, Notation, models
 
 
 #AJOUT
@@ -214,7 +214,37 @@ def reservation_list(request):
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
 
-
+@csrf_exempt # Desactive la protection CSRF (utile si tu teste avec Postman)
+def notation_view(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body) # Lire le JSON envoyé par le frontend
+            option = data.get("option") # Récupérer l'option choisie
+            
+            if not option:
+                return JsonResponse({"message": "Veuillez sélectionner une option."}, status=400)
+            
+            if Notation.objects.filter(user=request.user, option=option).exists():
+                return JsonResponse({"message": "Vous avez déjà voter pour cette option"}, status=400)
+            
+            # Enregistre la note dans la base de données
+            Notation.objects.create(user=request.user, option=option)
+            return JsonResponse({"message": "Vote enregistré avec succés !"}, status=201)
+        
+        except json.JSONDecodeError: # Gère le cas ou le JSON envoyé est valide
+            return JsonResponse({"message": "Format JSON invalide"}, status=400)
+    # Vérifie si la requête est de type GET (demande d'affichage des résultats)
+    elif request.method == "GET":
+        # Compte le nombre de notations pour chaque option
+        results = Notation.objects.values("option").annotate(count=models.Count(option))
+        
+        # Renvoie les résultats sous forme de JSON
+        return JsonResponse({"message": list(results)}, status=200)
+    
+    # Si la méthode HTTP n'est ni GET ni POST, on renvoie une erreur 405 (Méthode non autorisée)
+    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
+    
+            
 
          
 

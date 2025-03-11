@@ -19,6 +19,10 @@ const Confirmation = () => {
     }
 
     return(
+
+        
+
+
         <div style={{ textAlign: "center", padding: "20px" }}>
         <h2>Merci {reservationData.name}, votre réservation a bien été prise en compte !</h2>
         
