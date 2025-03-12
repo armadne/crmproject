@@ -85,17 +85,6 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
   
   
-  
-  
-class Notation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE) # l'utilisateur qui note
-    option = models.CharField(max_length=255) # L'option chosie
-    created_at = models.DateTimeField(auto_now_add=True) # Date de la notation
-    
-    class Meta:
-        unique_together = {'user', 'option'} # EMPECHE UN UTILISATEUR DE NOTER PLUSIEURS FOIS   
-
-
 
 
 

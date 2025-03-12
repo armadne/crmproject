@@ -15,7 +15,7 @@ import Register from './Register';
 // Importation du composant Login de Login.js
 import Login from './Login';
 
-import  FeedbackQRPage from  './reviews';
+import FeedbackQRPage from './reviews';
 
 import Navbar from './Navbar';
 

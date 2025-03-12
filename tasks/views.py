@@ -18,7 +18,7 @@ from django.contrib.auth import get_user_model
 #from django.contrib.auth.hashers import make_password
 
 # Importation du modèle de réservation défini dans models.py
-from .models import Reservation, Notation, models
+from .models import Reservation, models
 
 
 #AJOUT
@@ -213,7 +213,7 @@ def reservation_list(request):
     # Si la méthode HTTP utilisée n'est ni GET ni POST, on renvoie une erreur
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
-
+'''
 @csrf_exempt # Desactive la protection CSRF (utile si tu teste avec Postman)
 def notation_view(request):
     if request.method == "POST":
@@ -243,7 +243,7 @@ def notation_view(request):
     
     # Si la méthode HTTP n'est ni GET ni POST, on renvoie une erreur 405 (Méthode non autorisée)
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
-    
+''' 
             
 
          

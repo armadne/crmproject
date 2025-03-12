@@ -12,7 +12,7 @@ return (
             <Link to="/">Accueil</Link>
             <Link to="/register">Register</Link>
             <Link to="/login">Se connecter</Link>
-            <Link to="/feedback">Give A Review</Link>
+            <Link to="/reviews">Give A Review</Link>
         </div>
     </nav>
 )
