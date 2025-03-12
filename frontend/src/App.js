@@ -13,9 +13,11 @@ import Confirmation from "./ConfirmReservation";
 import Register from './Register';
 
 // Importation du composant Login de Login.js
-import Login from './Login'
+import Login from './Login';
 
-import  FeedbackQRPage from  './Reviews'
+import  FeedbackQRPage from  './reviews';
+
+import Navbar from './Navbar';
 
 
 
@@ -24,6 +26,8 @@ import  FeedbackQRPage from  './Reviews'
 function App() {
     return (
         <Router>
+
+            <Navbar/>
 
             <Routes>
 
