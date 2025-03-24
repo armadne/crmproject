@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import get_user_model  
+#from django.contrib.auth import get_user_model  
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -18,7 +18,7 @@ from django.contrib.auth import get_user_model
 #from django.contrib.auth.hashers import make_password
 
 # Importation du modèle de réservation défini dans models.py
-from .models import Reservation, models
+from .models import Reservation
 
 
 #AJOUT
@@ -28,12 +28,64 @@ from django.contrib.auth.hashers import make_password
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
+from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+
+
+from django.contrib.auth.backends import ModelBackend
+
+
+from .serializers import UserSerializer  # Vérifie ton serializer
+from rest_framework.response import Response
+
+
 # Récupération du modèle utilisateur (CustomUser si tu en as un, sinon le modèle User de Django)
 User = get_user_model()
 
 
+def validate_user_email(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            email = data.get("email", "")
+            
+            validate_email(email) # Vérifie si l'email est valide
+            
+            return JsonResponse({"message": "Adresse email valide" }, status=200)
+        
+        except ValidationError:
+            return JsonResponse({"message": "Adresse email invalide"}, status=400)
+        
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Format JSON invalide"}, status=400)
+        
+    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
-@csrf_exempt  # Désactive la protection CSRF (sinon Django bloque les requêtes POST externes)
+
+@api_view(['POST'])
+def register(request):
+    serializer = UserSerializer(data=request.data)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Inscription réussie"}, status=201)
+    
+    return Response(serializer.errors, status=400)  # Affiche les erreurs
+
+
+
+
+
+
+
+
+
+
+@api_view(["POST"])  # Désactive la protection CSRF (sinon Django bloque les requêtes POST externes)
 # FONCTION INSCRIPTION
 def register_view(request):
     
@@ -65,10 +117,10 @@ def register_view(request):
             #AJOUT
             # Création du nouvel utilisateur avec un password hashé
             user = User.objects.create_user(
-                name=name,
-                family_name=family_name,
                 email=email,
-                password= password # Hachage du mot de passe pour plus de sécurité
+                password=password, # Hachage du mot de passe pour plus de sécurité
+                name=name,
+                family_name=family_name
             )
             
             # réponse en JSON confirmant l'inscription
@@ -77,19 +129,22 @@ def register_view(request):
         except json.JSONDecodeError:
             # Gérer le cas où les données envoyées ne sont pas en format JSON valide
             return JsonResponse({"message": "Format JSON invalide"}, status=400)
-        
-         # Si la méthode HTTP n'est pas POST, on renvoie une erreur
-    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
-         
+                 
 
-@csrf_exempt # Désactive la protection CSRF (sinon Django bloque les requetes POST externes)
+@api_view(["POST"])  # Désactive la protection CSRF (sinon Django bloque les requetes POST externes)
 def login_view(request):
-    if request.method == "POST":
+    #if request.method == "POST":
+        #email = request.POST.get("email")
+        #password = request.POST.get("password"
+        #user = authenticate(request, username=email, password=password)
         
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        
-        user =authenticate(request, email=email, password=password)
+      #  if user:
+       #     refresh = RefreshToken.for_user(user)
+        #    return JsonResponse({
+        #        "message": "Connexion réussie",
+         #       "refresh": str(refresh),
+         #       "access": str(refresh.access_token)
+          #  }, status=200)
         
         try:
             # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
@@ -97,44 +152,36 @@ def login_view(request):
             email = data.get("email")
             password = data.get("password")
             
-            
-            # Vérifier que l'email et le mot de passe sont fournis
-            if not email or not password:
-                return JsonResponse({"message": "Email et mot de passe requis"}, status=400)
-            
-            # Verifier si l'utilisateur existe avec cet email 
-            user = User.objects.filter(email=email).first()
+        except json.JSONDecodeError:
+            return JsonResponse({"message": "Format JSON invalide"}, status=400)
             
             
-            # Si un utilisateur est trouvé, 
-            # on vérifie si le mot de passe fourni correspond au
-            # mot de passe haché stocké dans la base donnée
-            if user and check_password(password, user.password): # check_password(password, user.password) compare le mot de passe entré(password)(dans la page de connexion) avec le password hashé enregistré(user.password) enregistrer dans la base de donnée
-                
-                # AJOUT
-                refresh = RefreshToken.for_user(user)
-                return JsonResponse({
-                    "message": "Connexion réussie",
-                    "refresh": str(refresh),
-                    "access": str(refresh.access_token)
-                }, status=200)
+        # Vérifier que l'email et le mot de passe sont fournis
+        if not email or not password:
+            return JsonResponse({"message": "Email et mot de passe requis"}, status=400)
+        
+        try:
+            user = User.objects.get(email=email)
+            if not check_password(password, user.password):
+                raise User.DoesNotExist
+        except User.DoesNotExist:
+            return JsonResponse({"message": "Identifiants invalides"}, status=401)
+
+ 
+            # AJOUT
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({
+            "succes": True,
+            "message": "Connexion réussie",
+            "tokens": {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+            }
+        }, status=200)
                 
                 #login(request, user) # Authentifie l'utilisateur
                 #token = default_token_generator.make_token(user) # Génère un token
                 #return JsonResponse({"message": "Connexion réussie"}, status=200)
-            else:
-                return JsonResponse({"message": "Identifiants invalides"}, status=401) # status 401 : l'utilisateur doit etre authentifié
-        
-        except json.JSONDecodeError:
-            return JsonResponse({"message": "Format JSON invalide"}, status=400) # statut 400 = BAD REQUEST donnée manquante coté utilisateur/client
-        
-    return JsonResponse({"message": "Méthode non autorisée"}, status=405) # Utilisation de mauvaise méthode(exemple: utilisation de GET au lieu de POST)
-
-
-
-
-class MyTokenObtainPairView(TokenObtainPairView):
-    pass
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -145,13 +192,26 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+    
+    
+class EmailBackend(ModelBackend):
+    def authenticate(self, request, email=None, password=None, **kwargs):
+        UserModel = get_user_model()
+        try:
+            user = UserModel.objects.get(email=email)
+        except UserModel.DoesNotExist:
+            return None
+        if user.check_password(password) and self.user_can_authenticate(user):
+            return user
+        return None
 
 
 
 
 
 
-@csrf_exempt  # Désactive la protection CSRF (utile si tu testes avec Postman)
+@api_view(["GET", "POST"])  # Désactive la protection CSRF (utile si tu testes avec Postman)
+@permission_classes([IsAuthenticated]) # Seulement les utilisateurs authentifiés
 # FONCTION RESERVATION
 def reservation_list(request):
     
@@ -165,8 +225,8 @@ def reservation_list(request):
     
     if request.method == "GET":
         # Récupérer toutes les réservations
-        reservations = Reservation.objects.all().values("name", "email", "date", "time", "guests")
-        return JsonResponse({"reservations": (reservations)}, status=200)
+        reservations = list(Reservation.objects.all().values("name", "email", "date", "time", "guests"))
+        return JsonResponse({"reservations": reservations}, status=200)
 
 # POUR L'AUTHENTIFICATION, METTRE EN PLACE UN SYTEME AUTH
 # ET ENLEVER COMMENTAIRE CI DESSOUS

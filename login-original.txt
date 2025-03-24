@@ -50,20 +50,17 @@ const Login = () => {
         // le backend django va repondre au frontend React
         // On récupere la réponse du serveur et on la convertit en JSON
         /**** */
-        const data = await response.json();
-        console.log("Réponse au backend: ", data);
+        //const data = await response.json();
 
         if (response.ok) {
-            console.log("Token reçu : ", data.token);
             setMessage("Connexion réussie !"); // Si l'inscription est reussie, on affiche un message de succés
             // Enregistre le token de l'utilisateur après une connexion réussie
-            localStorage.setItem("token", data.token)  // stcke le token C'EST LA LIGNE QUI RECUPERE LE TOKEN DANS data.token    // ** COMMENTER **//
+            //localStorage.setItem("token", data.token)  // stcke le token    // ** COMMENTER **//
             // Redirige vers la page de reservations
             navigate("/reservations"); // Redirection vers la page reservations
         }else {
             setMessage("Erreur lors de l'inscription") // Sinon on affiche un message d'erreur  data.message
             //navigate("/reservations");
-            setMessage(data.error || "Erreur lors de la connexion");
         }
     };
 

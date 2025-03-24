@@ -22,15 +22,20 @@ const Register = () => {
     //  Met à jour les champs au fur et à mesure que l'utilisateur tape quelque chose dans les champs.
     const handleChange = (e) => {
             // On met à jour l'état formData en copiant les anciennes valeurs et en modifiant uniquement le champ modifié
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prevState => ({
+        ...prevState,
+        [e.target.name] : e.target.value
+    }));
     };
+
+    const[loading, setLoading] = useState(false)
 
 
     // Fonction qui s'exécute quand on clique sur le bouton "S'inscrire"
     //  S'exécute quand tu cliques sur "S'inscrire" pour envoyer les infos au serveur backend django.
     const handleSubmit = async (e) => {
         e.preventDefault();  // Empêche la page de se recharger lors de l'envoi du formulaire
-
+        setLoading(true); //Désactiver le bouton
     try {
                     
         // On envoie les données du formulaire au serveur Django
@@ -48,20 +53,25 @@ const Register = () => {
         const data = await response.json(); 
 
         if (response.ok) {
+            //const data = await response.json();
+           // console.log("Réponse après inscription: ", data);
+
             setMessage("Inscription réussie !"); // Si l'inscription est réussie, on affiche un message de succés
             navigate("/login") // // Rediriger vers la page de connexion après inscription
         }else {
-            setMessage(data.error || "Erreur lors de l'inscription"); // Sinon, on affiche un message d'erreur
+            setMessage(data.error || data.message || "Erreur lors de l'inscription"); // Sinon, on affiche un message d'erreur
             
         } 
     
     }catch (error) {
             console.log("Erreur d'inscription :", error);
             setMessage("Une erreur est survenue");
+        } finally {
+            setLoading(false); // Réactiver le bouton après la requête
         }
 
         
-    }
+    };
     
     return(
         <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", textAlign: "center"}}>
@@ -74,7 +84,10 @@ const Register = () => {
                 <input type="text" name="family_name" placeholder="Family Name" onChange={handleChange} required /><br/>
                 <input type="email" name="email" placeholder="Email" onChange={handleChange} required /><br/>
                 <input type="password" name="password" placeholder="Mot de Passe" onChange={handleChange} required /><br/>
-                <button type="submit" style={{ marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor: "pointer" }}>S'inscrire</button> {/* Bouton pour valider le formulaire */ }
+                <button type="submit" 
+                disabled={loading} 
+                style={{ marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor:loading ? "not-allowed" : "pointer" }}> {loading ? "Inscription..." : "S'inscrire"}</button> {/* Bouton pour valider le formulaire */ }
+
             </form>
         </div>
     );
