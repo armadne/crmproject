@@ -1,28 +1,32 @@
-import { createContext, useContext, useState, useEffect } from "react";
+// AuthContext.js
+import React, { createContext, useContext, useState } from "react";
 
+// Création du contexte d'authentification
 const AuthContext = createContext();
 
+// Création du fournisseur d'authentification
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        setIsAuthenticated(!!token);
-    }, []);
+  // Fonction pour se connecter
+  const login = () => {
+    setIsAuthenticated(true);
+  };
 
-    // Fonction de déconnexion (mise à jour du state seulement)
-    const logout = () => {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("token");
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        setIsAuthenticated(false);
-    };
+  // Fonction pour se déconnecter
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem("token"); // Supprime le token stocké
+  };
 
-    return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// Hook personnalisé pour utiliser le contexte
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

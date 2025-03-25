@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Par défaut
+    'tasks.views.EmailBackend', 
 ]
 
 

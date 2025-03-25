@@ -54,7 +54,7 @@ def validate_user_email(request):
             email = data.get("email", "")
             
             validate_email(email) # Vérifie si l'email est valide
-            
+        
             return JsonResponse({"message": "Adresse email valide" }, status=200)
         
         except ValidationError:
@@ -64,20 +64,6 @@ def validate_user_email(request):
             return JsonResponse({"message": "Format JSON invalide"}, status=400)
         
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
-
-
-@api_view(['POST'])
-def register(request):
-    serializer = UserSerializer(data=request.data)
-    
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Inscription réussie"}, status=201)
-    
-    return Response(serializer.errors, status=400)  # Affiche les erreurs
-
-
-
 
 
 
@@ -111,8 +97,13 @@ def register_view(request):
                 return JsonResponse({"message": "Tous les champs sont obligatoires"}, status=400)
             
             # Vérification si le nom ou le nom de famille ou l'email existe deja
+            try:
+                validate_email(email)
+            except ValidationError:
+                return JsonResponse({"message": "Adresse email invalide"}, status=400)
+            
             if User.objects.filter(email=email).exists():
-                return JsonResponse({"message": "Cette adresse mail existe deja dans notre base de donnée"}, status=400)
+                return JsonResponse({"message": "Cet email est déjà utilisé"}, status=400)
             
             #AJOUT
             # Création du nouvel utilisateur avec un password hashé
@@ -133,18 +124,6 @@ def register_view(request):
 
 @api_view(["POST"])  # Désactive la protection CSRF (sinon Django bloque les requetes POST externes)
 def login_view(request):
-    #if request.method == "POST":
-        #email = request.POST.get("email")
-        #password = request.POST.get("password"
-        #user = authenticate(request, username=email, password=password)
-        
-      #  if user:
-       #     refresh = RefreshToken.for_user(user)
-        #    return JsonResponse({
-        #        "message": "Connexion réussie",
-         #       "refresh": str(refresh),
-         #       "access": str(refresh.access_token)
-          #  }, status=200)
         
         try:
             # Récupération des données envoyées par l'user (nom, nom de famille , email...) sous forme de JSON
@@ -160,24 +139,22 @@ def login_view(request):
         if not email or not password:
             return JsonResponse({"message": "Email et mot de passe requis"}, status=400)
         
-        try:
-            user = User.objects.get(email=email)
-            if not check_password(password, user.password):
-                raise User.DoesNotExist
-        except User.DoesNotExist:
+        
+        user = authenticate(request, email=email, password=password)
+        if user is None:
             return JsonResponse({"message": "Identifiants invalides"}, status=401)
-
- 
-            # AJOUT
+        
         refresh = RefreshToken.for_user(user)
+ 
         return JsonResponse({
-            "succes": True,
+            "success": True,
             "message": "Connexion réussie",
             "tokens": {
             "refresh": str(refresh),
             "access": str(refresh.access_token)
             }
         }, status=200)
+        
                 
                 #login(request, user) # Authentifie l'utilisateur
                 #token = default_token_generator.make_token(user) # Génère un token
@@ -273,37 +250,6 @@ def reservation_list(request):
     # Si la méthode HTTP utilisée n'est ni GET ni POST, on renvoie une erreur
     return JsonResponse({"message": "Méthode non autorisée"}, status=405)
 
-'''
-@csrf_exempt # Desactive la protection CSRF (utile si tu teste avec Postman)
-def notation_view(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body) # Lire le JSON envoyé par le frontend
-            option = data.get("option") # Récupérer l'option choisie
-            
-            if not option:
-                return JsonResponse({"message": "Veuillez sélectionner une option."}, status=400)
-            
-            if Notation.objects.filter(user=request.user, option=option).exists():
-                return JsonResponse({"message": "Vous avez déjà voter pour cette option"}, status=400)
-            
-            # Enregistre la note dans la base de données
-            Notation.objects.create(user=request.user, option=option)
-            return JsonResponse({"message": "Vote enregistré avec succés !"}, status=201)
-        
-        except json.JSONDecodeError: # Gère le cas ou le JSON envoyé est valide
-            return JsonResponse({"message": "Format JSON invalide"}, status=400)
-    # Vérifie si la requête est de type GET (demande d'affichage des résultats)
-    elif request.method == "GET":
-        # Compte le nombre de notations pour chaque option
-        results = Notation.objects.values("option").annotate(count=models.Count(option))
-        
-        # Renvoie les résultats sous forme de JSON
-        return JsonResponse({"message": list(results)}, status=200)
-    
-    # Si la méthode HTTP n'est ni GET ni POST, on renvoie une erreur 405 (Méthode non autorisée)
-    return JsonResponse({"message": "Méthode non autorisée"}, status=405)
-''' 
             
 
          
@@ -315,4 +261,4 @@ def api_home(request):
     quand on accède à l'URL de base de l'API.
     """
     
-    return JsonResponse({"message": "Bienvenue sur l'API Django"})
+    return JsonResponse({"message": "API Django est en ligne"})

@@ -22,9 +22,9 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/logout" element={<Logout />} /> {/* 🔥 Nouvelle route logout */}
+                    <Route path="/login" element={<Login />} /> 
                     <Route path="/reservations" element={<ProtectedRoute element={<Reservations />} />} />
+                    <Route path="/logout" element={<Logout />} /> {/* 🔥 Nouvelle route logout */}
                     <Route path="/confirmation" element={<ProtectedRoute element={<Confirmation />} />} />
                     <Route path="/reviews" element={<FeedbackQRPage />} />
                 </Routes>

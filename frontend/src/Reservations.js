@@ -64,7 +64,7 @@ const Reservations = () => {
 
             // Envoie les données du formulaire à notre API Django
              const response = await fetch("http://127.0.0.1:8000/api/reservations/", {
-                method: "POST",  // modif  GET --> POST
+                method: "GET",  // modif  GET --> POST
                 headers:{
 
                     // Spécifier qu'on envoie du JSON
