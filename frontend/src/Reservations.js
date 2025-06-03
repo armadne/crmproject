@@ -87,8 +87,8 @@ const Reservations = () => {
             
              if (response.ok) {
 
-                localStorage.setItem("token", data.token); // 🔥 Enregistrer le token
-                console.log("Token enregistré :", localStorage.getItem("token")); // Vérifier si le token est bien stocké
+               // localStorage.setItem("token", data.token); // 🔥 Enregistrer le token
+               // console.log("Token enregistré :", localStorage.getItem("token")); // Vérifier si le token est bien stocké
 
                 console.log("Reservation réussie !");
 
