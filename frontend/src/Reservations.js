@@ -58,13 +58,13 @@ const Reservations = () => {
                 return;
             }
             
-            else {
-                navigate("/reservations")
-            }
+            //else {
+              //  navigate("/reservations")
+            //}
 
             // Envoie les données du formulaire à notre API Django
              const response = await fetch("http://127.0.0.1:8000/api/reservations/", {
-                method: "GET",  // modif  GET --> POST
+                method: "POST",  // modif  GET --> POST
                 headers:{
 
                     // Spécifier qu'on envoie du JSON
@@ -72,7 +72,7 @@ const Reservations = () => {
 
                     // Envoyer le token pour l'authentification
                     // l'utilisateur doit avoir 'lautorisation' en d'autre terme il doit avoir un compte et etre connecter pour faire une reservation
-                    //"Authorization": "Bearer " + token  // ** MODIF **//
+                    "Authorization": `Bearer ${token}` // "Bearer" est une règle obligatoire pour envoyer un token
                 },
 
                 body: JSON.stringify(formData) // Convertir formData en JSON
@@ -100,14 +100,16 @@ const Reservations = () => {
                 localStorage.setItem("reservations", JSON.stringify(updatedReservations));
 
                 // Rediriger vers la page de confirmation avec les données
-                navigate("/confirmation", {state: { reservationData: formData} });
+                navigate("/confirmation", {state: {reservationData: formData} });
              } else {
-                //alert(data.error || "Erreur lors de la reservation")
+                alert(data.error || "Erreur lors de la reservation")  
+                //navigate("/confirmation", {state: { reservationData: formData} });  // AJT DE CETTE LIGNE
                 alert("Erreur de connexion : " + (data.error || "Identifiants invalides"));
              }
 
             } catch(error) {
-                console.error("Erreur lors de la reservation :", error);
+                //navigate("/confirmation", {state: { reservationData: formData} }); // AJT DE CETTE LIGNE
+                console.error("Erreur lors de la reservation :", error);  
                 alert("Erreur lors de la reservation. Veuillez réessayer.");
             }
 
