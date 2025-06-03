@@ -1,0 +1,2 @@
+run backend django : python manage.py runserver
+run frontend : node start
