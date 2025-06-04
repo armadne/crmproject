@@ -36,7 +36,7 @@ const Login = () => {
             const data = await response.json();
 
 
-            if (response.status === 200) {
+            if (response.ok && data.tokens) {
                 console.log("Token reçu : ", data.token);
                 localStorage.setItem("token", data.token); // Creer un token pour l'utilisateur qui s'est connecter
                 console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL

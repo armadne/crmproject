@@ -121,6 +121,9 @@ def register_view(request):
             # Gérer le cas où les données envoyées ne sont pas en format JSON valide
             return JsonResponse({"message": "Format JSON invalide"}, status=400)
                  
+                 
+                 
+                 
 
 @api_view(["POST"])  # Désactive la protection CSRF (sinon Django bloque les requetes POST externes)
 def login_view(request):
