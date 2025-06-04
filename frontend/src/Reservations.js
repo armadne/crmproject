@@ -37,19 +37,17 @@ const Reservations = () => {
     };
 
 
+
+
     // Fonction exécutée quand l'utilisateur appuie sur le bouton "Confirmer la réservation"
     const handleSubmit = async (e) => {
         e.preventDefault(); // Empêche le rechargement de la page
         
-        
-
+        const token = localStorage.getItem("token")
+        console.log("Token récupéré :", token)
         // PROBLEME: ECHEC ENVOIE DES DONNEES DU FORMULAIRE A l'API DJANGO <---- Probleme resolu en remplaçant axios par fetch , 
         // axios et fetch ont la meme fonction, celle d'envoyer des requêtes HTTP au serveur backend Django
-        try {
-            // Récupérer le token
-            // MODIF CODE : AJOUT DE LA LIGNE CI DESSOUS "token"
-            const token = localStorage.getItem("token");
-            console.log("Token récupéré : ", token) 
+    
 
             // Vérifier si l'utilisateur est connecté
             if (!token) {
@@ -58,12 +56,13 @@ const Reservations = () => {
                 return;
             }
             
-            //else {
-              //  navigate("/reservations")
-            //}
+ 
 
+            try {
             // Envoie les données du formulaire à notre API Django
-             const response = await fetch("http://127.0.0.1:8000/api/reservations/", {
+             const response = await fetch("http://127.0.0.1:8000/api/reservations/", 
+        
+                {
                 method: "POST",  // modif  GET --> POST
                 headers:{
 
@@ -78,15 +77,30 @@ const Reservations = () => {
                 body: JSON.stringify(formData) // Convertir formData en JSON
 
              }); 
-
-             // await attend que la conversion soit terminée avant de stocker le résultat dans data.
-             const data = await response.json();
-             console.log("Réponse API après connexion :", data); // 🔍 Voir la réponse
+             console.log("FormData envoyé :", formData); // ce message s'affichera dans devtool -> console
+             console.log("Status HTTP : ", response.status); // ce message s'affichera dans devtool -> console
              
+             let data = null; // data contient les données retournées par l'API
+               
+            try {
 
+                data = await response.json(); //ICI on essaie de lire le corps de la requete reçu en en format JSON,  Peut échouer si le contenu n'est pas du JSON
+
+             } 
+             // SI la réponse n'est pas au format JSON valide ou est vide, on attrape l'erreur ici
+             catch(parseError) {
+                console.warn("Réponse non-JSON ou vide :", parseError);
+
+             }
+
+  
+
+    
+            
             
              if (response.ok) {
 
+                console.log("Réponse API après connexion :", data); // Voir la réponse
                // localStorage.setItem("token", data.token); // 🔥 Enregistrer le token
                // console.log("Token enregistré :", localStorage.getItem("token")); // Vérifier si le token est bien stocké
 
@@ -96,24 +110,31 @@ const Reservations = () => {
                 const updatedReservations = [...reservations, formData];
 
                 // Mettre à jour l'état local et le localStorage
+                // POUR VOIR LES RESERVATIONS FAITES SUR LA PAGE DE RESERVATIONS (STOCKAGE EN LOACAL)
                 setReservations(updatedReservations);
                 localStorage.setItem("reservations", JSON.stringify(updatedReservations));
 
                 // Rediriger vers la page de confirmation avec les données
                 navigate("/confirmation", {state: {reservationData: formData} });
-             } else {
+             } 
+             // CI-DESSOUS ERREUR LIER A L'API (API c'est ce qui lie le frontend React JS et le backend Django Python)
+             else {
                 alert(data.error || "Erreur lors de la reservation")  
+                console.error("Erreur reservation ", data)
                 //navigate("/confirmation", {state: { reservationData: formData} });  // AJT DE CETTE LIGNE
-                alert("Erreur de connexion : " + (data.error || "Identifiants invalides"));
+                //alert("Erreur de connexion : " + (data.error || "Identifiants invalides"));
              }
 
-            } catch(error) {
-                //navigate("/confirmation", {state: { reservationData: formData} }); // AJT DE CETTE LIGNE
-                console.error("Erreur lors de la reservation :", error);  
+            }  // Ci-dessous erreur lié a l'envoie de requêtes HTTP
+        catch(error) {
+                console.error("Erreur lors de la reservation :", error);  // Affiche l'erreur dans la console de devtool
                 alert("Erreur lors de la reservation. Veuillez réessayer.");
             }
+        
 
         };
+    
+
 
 
     // Affichage du formulaire de réservation

@@ -38,7 +38,7 @@ const Login = () => {
 
             if (response.status === 200) {
                 console.log("Token reçu : ", data.token);
-                localStorage.setItem("token", data.token); // JAI AJOUTER CETTE LIGNE
+                localStorage.setItem("token", data.token); // Creer un token pour l'utilisateur qui s'est connecter
                 console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
                 login(); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
                 navigate("/reservations");

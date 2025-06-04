@@ -1,0 +1,72 @@
+Bien sûr ! Voici quelques exemples de JSON non valide (qui provoqueront une erreur si tu essaies de les parser avec JSON.parse() ou response.json()):
+
+1. Chaîne de caractères non encadrée par des guillemets
+json
+Copier
+Modifier
+{ name: "Alice" }
+Pourquoi c’est non valide ?
+En JSON, les clés doivent toujours être des chaînes de caractères entourées de guillemets doubles " ". Ici, name n’a pas de guillemets.
+
+2. Utilisation de guillemets simples au lieu de doubles
+json
+Copier
+Modifier
+{ "name": 'Alice' }    
+Pourquoi c’est non valide ?
+En JSON, les chaînes de caractères doivent être entourées de guillemets doubles " (pas simples ').
+
+3. Virgule en trop
+json
+Copier
+Modifier
+{ "name": "Alice", }
+Pourquoi c’est non valide ?
+La virgule après le dernier élément d’un objet ou d’un tableau est interdite en JSON.
+
+4. Manque de fermeture d’accolade
+json
+Copier
+Modifier
+{ "name": "Alice"
+Pourquoi c’est non valide ?
+Le JSON est incomplet, il manque la fermeture }.
+
+5. Valeur non valide
+json
+Copier
+Modifier
+{ "age": NaN }
+Pourquoi c’est non valide ?
+NaN (Not a Number) n’est pas une valeur JSON valide. En JSON, les valeurs possibles sont : chaînes, nombres, booléens (true/false), null, objets {}, ou tableaux [].
+
+6. Texte brut sans structure JSON
+json
+Copier
+Modifier
+Hello World!
+Pourquoi c’est non valide ?
+Ce n’est pas un JSON du tout. Un JSON doit être un objet {} ou un tableau [] au minimum.
+
+7. Tableau mal formé
+json
+Copier
+Modifier
+[ "apple", "banana", "orange", ]
+Pourquoi c’est non valide ?
+Comme pour les objets, la virgule finale dans un tableau n’est pas autorisée.
+
+Résumé rapide
+Exemple	Pourquoi non valide
+{ name: "Alice" }	Clé non encadrée par guillemets doubles
+{ "name": 'Alice' }	Chaîne en guillemets simples
+{ "name": "Alice", }	Virgule finale interdite
+{ "name": "Alice"	Fermeture manquante
+{ "age": NaN }	Valeur non valide (NaN)
+Hello World!	Pas un JSON du tout
+[ "apple", ]	Virgule finale interdite dans un tableau
+
+
+BON FORMAT JSON et JSON VALIDE EXEMPLE :
+
+{ "name": "Alice" }    
