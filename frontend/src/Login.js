@@ -1,5 +1,5 @@
 // Login.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext"; // Importation du contexte
 
@@ -14,10 +14,15 @@ const Login = () => {
 
     const [message, setMessage] = useState("");
 
+    // Redirection déplacée useEffect
+
+    useEffect(() => {
     if (isAuthenticated) {
         navigate("/reservations"); // Redirige immédiatement si déjà connecté
-        return null;
+        //return null // ECTTE LIGNE FAIT QUOI
     }
+
+}, [isAuthenticated, navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,12 +41,13 @@ const Login = () => {
             const data = await response.json();
 
 
-            if (response.ok && data.tokens) {
-                console.log("Token reçu : ", data.token);
+            if (response.ok && data.token) {
+                console.log("Token reçu : ", localStorage.getItem("token"));
+                
                 localStorage.setItem("token", data.token); // Creer un token pour l'utilisateur qui s'est connecter
                 console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
-                login(); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
-                navigate("/reservations");
+                login(data.token); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
+                //navigate("/reservations");
             } else {
                 setMessage(data.error || "Erreur lors de la connexion");
             }

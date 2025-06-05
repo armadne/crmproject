@@ -79,8 +79,8 @@ const Reservations = () => {
                 body: JSON.stringify(formData) // Convertir formData en JSON
 
              }); 
-             console.log("FormData envoyé :", formData); // ce message s'affichera dans devtool -> console
-             console.log("Status HTTP : ", response.status); // ce message s'affichera dans devtool -> console
+            // console.log("FormData envoyé :", formData); // ce message s'affichera dans devtool -> console
+            // console.log("Status HTTP : ", response.status); // ce message s'affichera dans devtool -> console
              
              let data = null; // data contient les données retournées par l'API
                
@@ -96,9 +96,6 @@ const Reservations = () => {
              }
 
   
-
-    
-            
             
              if (response.ok) {
 
@@ -121,7 +118,7 @@ const Reservations = () => {
              } 
              // CI-DESSOUS ERREUR LIER A L'API (API c'est ce qui lie le frontend React JS et le backend Django Python)
              else {
-                alert(data.error || "Erreur lors de la reservation")  
+                alert(data?.error || "Erreur lors de la reservation")  
                 console.error("Erreur reservation ", data)
                 //navigate("/confirmation", {state: { reservationData: formData} });  // AJT DE CETTE LIGNE
                 //alert("Erreur de connexion : " + (data.error || "Identifiants invalides"));
@@ -129,7 +126,7 @@ const Reservations = () => {
 
             }  // Ci-dessous erreur lié a l'envoie de requêtes HTTP
         catch(error) {
-                console.error("Erreur lors de la reservation :", error);  // Affiche l'erreur dans la console de devtool
+                console.error("Erreur de réseau :", error);  // Affiche l'erreur dans la console de devtool
                 alert("Erreur lors de la reservation. Veuillez réessayer.");
             }
         
