@@ -47,7 +47,7 @@ const Login = () => {
                 localStorage.setItem("token", data.token); // Creer un token pour l'utilisateur qui s'est connecter
                 console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
                 login(data.token); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
-                //navigate("/reservations");
+                navigate("/reservations");
             } else {
                 setMessage(data.error || "Erreur lors de la connexion");
             }

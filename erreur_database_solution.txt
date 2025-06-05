@@ -1,0 +1,10 @@
+erreur:
+
+django.db.utils.OperationalError: no such table: tasks_user
+[05/Jun/2025 20:38:59] "POST /api/register/ HTTP/1.1" 500 157471
+
+
+solution relancer recreer la base de donnée de "tasks":
+
+python manage.py makemigrations
+python manage.py migrate

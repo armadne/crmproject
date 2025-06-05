@@ -1,11 +1,12 @@
 //import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; //Pour changer de page après que le user s'est inscrit
-
+//import { useAuth } from "./AuthContext";
 
 // On définit un composant nommé Register
 const Register = () => {
     const navigate = useNavigate(); // Permet de rediriger le utilisateur vers une autre page après l'inscription réussie
+
 
     // On crée un état formData pour stocker les valeurs des champs du formulaire
     const [formData, setFormData] = useState({
@@ -18,6 +19,9 @@ const Register = () => {
     // On crée un état message pour afficher un message aprèes inscription
     const [message, setMessage] =useState("");
 
+    // Etat pour savoir si on est en train le formualaire (utilie pour desactiver le bouton)
+    const [loading, setLoading] = useState(false);
+
     // Fonction qui s'exécute quand l'utilisateur tape dans un champ
     //  Met à jour les champs au fur et à mesure que l'utilisateur tape quelque chose dans les champs.
     const handleChange = (e) => {
@@ -28,7 +32,6 @@ const Register = () => {
     }));
     };
 
-    const[loading, setLoading] = useState(false)
 
 
     // Fonction qui s'exécute quand on clique sur le bouton "S'inscrire"
@@ -37,7 +40,7 @@ const Register = () => {
         e.preventDefault();  // Empêche la page de se recharger lors de l'envoi du formulaire
         setLoading(true); //Désactiver le bouton
     try {
-                    
+                     
         // On envoie les données du formulaire au serveur Django
         // "fetch" envoie les données au backend django (http://127.0.0.1:8000)
         const response =await fetch("http://127.0.0.1:8000/api/register/", {
@@ -53,8 +56,7 @@ const Register = () => {
         const data = await response.json(); 
 
         if (response.ok) {
-            //const data = await response.json();
-           // console.log("Réponse après inscription: ", data);
+
 
             setMessage("Inscription réussie !"); // Si l'inscription est réussie, on affiche un message de succés
             navigate("/login") // // Rediriger vers la page de connexion après inscription
