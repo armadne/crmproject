@@ -110,6 +110,7 @@ const Reservations = () => {
 
                 // Mettre à jour l'état local et le localStorage
                 // POUR VOIR LES RESERVATIONS FAITES SUR LA PAGE DE RESERVATIONS (STOCKAGE EN LOACAL)
+
                 setReservations(updatedReservations);
                 localStorage.setItem("reservations", JSON.stringify(updatedReservations));
 

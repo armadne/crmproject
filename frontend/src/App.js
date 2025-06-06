@@ -7,7 +7,7 @@ import Login from './Login';
 import FeedbackQRPage from './reviews';
 import Navbar from './Navbar';
 import Logout from './Logout'; // 🔥 Import du composant Logout
-import { AuthProvider, useAuth } from './AuthContext';
+import { useAuth } from './AuthContext';
 
 // Protéger les routes réservées aux utilisateurs connectés
 const ProtectedRoute = ({ element }) => {
@@ -17,7 +17,7 @@ const ProtectedRoute = ({ element }) => {
 
 function App() {
     return (
-        <AuthProvider>
+        
             <Router>
                 <Navbar />
                 <Routes>
@@ -29,7 +29,7 @@ function App() {
                     <Route path="/reviews" element={<FeedbackQRPage />} />
                 </Routes>
             </Router>
-        </AuthProvider>
+        
     );
 }
 

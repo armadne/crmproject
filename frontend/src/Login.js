@@ -18,6 +18,7 @@ const Login = () => {
 
     useEffect(() => {
     if (isAuthenticated) {
+        console.log("Redirection vers /reservations...");
         navigate("/reservations"); // Redirige immédiatement si déjà connecté
         
     }
@@ -30,7 +31,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage(""); // Effacer le message précédent
+        setMessage(""); // Réinitialise le message d'erreur
 
         try {
             const response = await fetch("http://127.0.0.1:8000/api/login/", {
@@ -42,12 +43,12 @@ const Login = () => {
             const data = await response.json();
 
 
-            if (response.ok && data.token?.access) {
-                //console.log("Token reçu : ", localStorage.getItem("token"));
+            if (response.ok) { // && data.token?.access
+                console.log("Token reçu : ", localStorage.getItem("token"));
                 
-                localStorage.setItem("token", data.token.access); // Creer un token pour l'utilisateur qui s'est connecter
-                console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
-                login(data.token.access); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
+                localStorage.setItem("token", data.token); //data.token.access ; Creer un token pour l'utilisateur qui s'est connecter
+                //console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
+                login(data.token); // data.token.access Utilise la fonction login pour marquer l'utilisateur comme authentifié
                 navigate("/reservations");
             } else {
                 setMessage(data.error || "Erreur lors de la connexion");
