@@ -19,7 +19,7 @@ const Login = () => {
     useEffect(() => {
     if (isAuthenticated) {
         navigate("/reservations"); // Redirige immédiatement si déjà connecté
-        //return null // ECTTE LIGNE FAIT QUOI
+        
     }
 
 }, [isAuthenticated, navigate]);
@@ -30,6 +30,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage(""); // Effacer le message précédent
 
         try {
             const response = await fetch("http://127.0.0.1:8000/api/login/", {
@@ -41,12 +42,12 @@ const Login = () => {
             const data = await response.json();
 
 
-            if (response.ok && data.token) {
-                console.log("Token reçu : ", localStorage.getItem("token"));
+            if (response.ok && data.token?.access) {
+                //console.log("Token reçu : ", localStorage.getItem("token"));
                 
-                localStorage.setItem("token", data.token); // Creer un token pour l'utilisateur qui s'est connecter
+                localStorage.setItem("token", data.token.access); // Creer un token pour l'utilisateur qui s'est connecter
                 console.log("Token stocké :", localStorage.getItem("token")) // AFFICHE LE TOKEN DANS LE TERMINAL
-                login(data.token); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
+                login(data.token.access); // Utilise la fonction login pour marquer l'utilisateur comme authentifié
                 navigate("/reservations");
             } else {
                 setMessage(data.error || "Erreur lors de la connexion");
@@ -61,11 +62,11 @@ const Login = () => {
     return (
         <div style={{ maxWidth: "400px", margin: "auto", padding: "20px", textAlign: "center" }}>
             <h2>Login</h2>
-            {message && <p>{message}</p>}
+            {message && <p style={{ color: "red" }}>{message}</p>}
 
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
                 <input type="text" name="email" placeholder="test12@gmail.com" onChange={handleChange} required /><br />
-                <input type="password" name="password" onChange={handleChange} /><br />
+                <input type="password" name="password" onChange={handleChange} required /><br />
                 <button type="submit" style={{ marginTop: "10px", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", cursor: "pointer" }}>
                     Se connecter
                 </button>
