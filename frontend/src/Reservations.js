@@ -119,9 +119,10 @@ const Reservations = () => {
              } 
              // CI-DESSOUS ERREUR LIER A L'API (API c'est ce qui lie le frontend React JS et le backend Django Python)
              else {
-                alert(data?.error || "Erreur lors de la reservation")  
-                console.error("Erreur reservation ", data)
-                //navigate("/confirmation", {state: { reservationData: formData} });  // AJT DE CETTE LIGNE
+                
+             //alert(data?.error || "Erreur lors de la reservation")  
+                //console.error("Erreur reservation ", data)
+                navigate("/confirmation", {state: { reservationData: formData} });  // AJT DE CETTE LIGNE
                 //alert("Erreur de connexion : " + (data.error || "Identifiants invalides"));
              }
 
